@@ -53,6 +53,17 @@ export const deleteWorker = async (req, res) => {
   }
 };
 
+// Get Single Worker (Public for verification page)
+export const getWorkerPublic = async (req, res) => {
+  try {
+    const worker = await Worker.findById(req.params.id);
+    if (!worker) return res.status(404).json({ message: 'Worker not found' });
+    res.json(worker);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Toggle Active / Hidden Status
 export const toggleWorkerStatus = async (req, res) => {
   try {

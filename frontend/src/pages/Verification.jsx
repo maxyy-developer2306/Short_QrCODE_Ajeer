@@ -22,8 +22,17 @@ export default function Verification() {
   }, []);
 
   useEffect(() => {
-    API.get('/workers').then(({ data }) => setWorkers(data)).catch(console.error);
-  }, []);
+    if (workerId) {
+      API.get(`/workers/public/${workerId}`)
+        .then(({ data }) => setWorkers([data]))
+        .catch((err) => {
+          console.error(err);
+          setWorkers([]);
+        });
+    } else {
+      API.get('/workers').then(({ data }) => setWorkers(data)).catch(console.error);
+    }
+  }, [workerId]);
 
   const filteredWorkers = workerId
     ? workers.filter(w => w._id === workerId && w.status === 'active')
