@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
     try {
       const { data } = await API.post('/auth/login', { username, password });
       localStorage.setItem('token', data.token);
@@ -19,6 +22,8 @@ export default function Login() {
     } catch (err) {
       console.error('Login Error:', err);
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -35,6 +40,7 @@ export default function Login() {
             onChange={(e) => setUsername(e.target.value)} 
             className="w-full p-2 bg-gray-700 rounded border border-gray-600 focus:outline-none focus:border-indigo-500"
             required 
+            disabled={isLoading}
           />
         </div>
         <div className="mb-6">
@@ -45,10 +51,22 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)} 
             className="w-full p-2 bg-gray-700 rounded border border-gray-600 focus:outline-none focus:border-indigo-500"
             required 
+            disabled={isLoading}
           />
         </div>
-        <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 p-2 rounded font-bold transition">
-          Login
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-indigo-600 hover:bg-indigo-700 p-2 rounded font-bold transition disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <>
+              <span className="mr-2 flex h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              Logging in...
+            </>
+          ) : (
+            'Login'
+          )}
         </button>
       </form>
     </div>

@@ -7,7 +7,7 @@ export default function Dashboard() {
   const [workers, setWorkers] = useState([]);
   const [form, setForm] = useState({
     worker_name: '',
-    permit_status: '',
+    permit_status: 'Active',
     start_date: '',
     expiry_date: '',
     beneficiary_name: '',
@@ -17,6 +17,7 @@ export default function Dashboard() {
   });
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
 
   const fetchWorkers = async () => {
@@ -34,6 +35,7 @@ export default function Dashboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       if (editingId) {
         await API.put(`/workers/${editingId}`, form);
@@ -55,6 +57,8 @@ export default function Dashboard() {
       fetchWorkers();
     } catch (err) {
       alert('Error saving worker');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -164,9 +168,17 @@ export default function Dashboard() {
               <div className="md:col-span-2 flex gap-3 pt-2">
                 <button
                   type="submit"
-                  className="cursor-pointer flex-1 bg-white text-black hover:bg-gray-200 p-2.5 rounded-md font-bold transition"
+                  disabled={isSaving}
+                  className="cursor-pointer flex-1 bg-white text-black hover:bg-gray-200 p-2.5 rounded-md font-bold transition disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {editingId ? 'Update Worker' : 'Add Worker'}
+                  {isSaving ? (
+                    <>
+                      <span className="mr-2 flex h-4 w-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+                      {editingId ? 'Updating...' : 'Adding...'}
+                    </>
+                  ) : (
+                    editingId ? 'Update Worker' : 'Add Worker'
+                  )}
                 </button>
                 <button
                   type="button"
