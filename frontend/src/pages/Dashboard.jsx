@@ -7,7 +7,7 @@ export default function Dashboard() {
   const [workers, setWorkers] = useState([]);
   const [form, setForm] = useState({
     worker_name: '',
-    permit_status: '',
+    permit_status: 'Active',
     start_date: '',
     expiry_date: '',
     beneficiary_name: '',
@@ -45,7 +45,7 @@ export default function Dashboard() {
       }
       setForm({
         worker_name: '',
-        permit_status: '',
+        permit_status: 'Active',
         start_date: '',
         expiry_date: '',
         beneficiary_name: '',
@@ -66,7 +66,7 @@ export default function Dashboard() {
     setEditingId(null);
     setForm({
       worker_name: '',
-      permit_status: '',
+      permit_status: 'Active',
       start_date: '',
       expiry_date: '',
       beneficiary_name: '',
