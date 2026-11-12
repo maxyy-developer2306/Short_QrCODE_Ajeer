@@ -7,7 +7,7 @@ export default function Dashboard() {
   const [workers, setWorkers] = useState([]);
   const [form, setForm] = useState({
     worker_name: '',
-    permit_status: 'Active',
+    permit_status: '',
     start_date: '',
     expiry_date: '',
     beneficiary_name: '',
@@ -155,14 +155,25 @@ export default function Dashboard() {
                   <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">
                     {key.replace(/_/g, ' ')}
                   </label>
-                  <input
-                    type="text"
-                    placeholder={key.replace(/_/g, ' ').toUpperCase()}
-                    value={form[key] || ''}
-                    onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-                    className={inputClass}
-                    required
-                  />
+                  {key === 'permit_status' ? (
+                    <select
+                      value={form.permit_status}
+                      onChange={(e) => setForm({ ...form, permit_status: e.target.value })}
+                      className={inputClass}
+                      required
+                    >
+                      <option value="Active">Active</option>
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      placeholder={key.replace(/_/g, ' ').toUpperCase()}
+                      value={form[key] || ''}
+                      onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                      className={inputClass}
+                      required
+                    />
+                  )}
                 </div>
               ))}
               <div className="md:col-span-2 flex gap-3 pt-2">
